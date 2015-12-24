@@ -1,0 +1,5 @@
+SlackChat = {
+  Utils: {},
+  Methods: {},
+  Collections: {}
+}

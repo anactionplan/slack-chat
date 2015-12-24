@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  text-align: center;
+  padding: 0px;
+}
+.slack-chat {
+  position: fixed;
+  bottom: -272px;
+  right: 0;
+  width: 400px;
+  height: 300px;
+  -webkit-transition-duration: 0.35s;
+  -moz-transition-duration: 0.35s;
+  -ms-transition-duration: 0.35s;
+  -o-transition-duration: 0.35s;
+  transition-duration: 0.35s;
+  padding: 2px;
+  transition: all 0.3s ease-out;
+  text-decoration: none;
+  color: black;
+  right: -2px;
+  z-index: 9;
+}
+.slack-chat.open {
+  bottom: -35px;
+  display: block;
+}
+.slack-chat-header {
+  text-align: center;
+  background: #3e474f;
+  color: #FFF;
+  border-radius: 4px 4px 0 0;
+  width: 350px;
+  float: right;
+  height: 26px;
+  line-height: 26px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.slack-chat-content {
+  background: #fff;
+  padding: 10px;
+  margin-top: 30px;
+  border-radius: 4px 0 0 0;
+}

@@ -1,0 +1,46 @@
+<template name="slackChatWindow">
+  <div class="slack-chat" id="slack-chat">
+    <div class="slack-chat-header">
+       {{! Helper to know wich message Show mostly for UI}}
+      {{#if chatOpen}}
+          {{customerServiceName}}-{{customerServiceStatus}}
+        {{else}}
+      {{slackChatSettings.chatHeader}}
+      {{/if}}
+    </div>
+    <div class="slack-chat-content">
+      {{#if showLoadingIcon}} {{! Start Loading helper}}
+        LOADING....
+        {{else}}
+        {{#if someErrorOcurr}} {{! Start Some Error ocurr Helper}}
+         Error
+          {{else}}
+        {{#if isSupportUserIsAvaible customerServiceStatus}} {{! Start Customer Service Stauts}}
+        {{#if slackConnectionError}} {{! Start Chat Error}}
+          Error
+          {{else}}
+          {{#each channelMessages}}
+            {{#if isJoinMessage this.type}}
+              {{customerServiceName}} - {{joinChatMessage}}
+            {{/if}}
+            {{#if isLeaveMessage this.type}}
+              {{customerServiceName}} - {{leaveChatMessage}}
+            {{/if}}
+            {{#if isArchivedMessage this.type}}
+              {{customerServiceName}} - {{archivedChatMessage}}
+            {{/if}}
+            {{#if isNormalMessage}}
+              {{this.owner}} - {{this.text}}
+            {{/if}}
+          {{/each}}
+          <textarea id="slack-post-text"></textarea>
+          <button id="slack-post-submit">Send</button>
+        {{/if}} {{! End Chat Error}}
+        {{else}}
+         Customer Service Not Avaible
+        {{/if}} {{! End Customer Service Stauts}}
+      {{/if}} {{! End Some Error Ocurr Helper}}
+      {{/if}} {{! End Loading Helper}}
+    </div>
+  </div>
+</template>
