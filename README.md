@@ -124,8 +124,6 @@ Here we had 2 collection
 
 ## Main Contributors
 
-<ul>
- <li>
-  Ethan Escareño ([Ethaan](https://github.com/Ethaan))
- </li>
-</ul>
+
+  Ethan Escareño ([Ethaan] (https://github.com/Ethaan))
+
