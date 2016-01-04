@@ -23,7 +23,9 @@ Template.slackChatWindow.events({
 
     SlackChat.Utils.toggleSlackChat(instance);
   },
-  'click #slack-post-submit': function(event, template) {
+  'keyup': function(event, template) {
+    event.preventDefault();
+    if(event.keyCode == 13){
     var instance = Template.instance(),
       slackDataSettings = instance.data.slackChatSettings,
       supportHistory = SlackChat.Utils.supportHistory(),
@@ -36,6 +38,7 @@ Template.slackChatWindow.events({
       },
       sendSlackMessage = SlackChat.Utils.postSlackChatMessage(messageData);
     textAreaElement.val('');
+    }
   }
 });
 

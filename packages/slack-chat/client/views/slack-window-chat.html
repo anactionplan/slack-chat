@@ -33,11 +33,13 @@
               {{this.owner}} - {{this.text}}
             {{/if}}
           {{/each}}
-          <textarea id="slack-post-text"></textarea>
+          <textarea id="slack-post-text" placeholder="Chat here"></textarea>
           <button id="slack-post-submit">Send</button>
         {{/if}} {{! End Chat Error}}
         {{else}}
-         Customer Service Not Avaible
+        <textarea id="slack-post-text" placeholder="Enter a message..."></textarea>
+          <!-- <button id="slack-post-submit">Send</button> -->
+         <!-- Customer Service Not Avaible -->
         {{/if}} {{! End Customer Service Stauts}}
       {{/if}} {{! End Some Error Ocurr Helper}}
       {{/if}} {{! End Loading Helper}}
