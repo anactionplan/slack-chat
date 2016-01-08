@@ -1,7 +1,25 @@
+Tracker.autorun(function() {
+  var archivedMessage = SlackChat.Collections.ChatHistory.findOne({
+      subtype: 'channel_archive'
+    }),
+    owner = archivedMessage && archivedMessage.owner;
+  if (archivedMessage) {
+    SlackChat.Collections.ChatHistory.remove({}, function(error, result) {
+      SlackChat.Collections.ChatHistory.insert({
+        text: 'Ask for support again',
+        owner: owner,
+        ts: new Date().getTime(),
+        subtype: 'reopen'
+      })
+    });
+  }
+});
+
 Template.slackChatWindow.events({
-  "click .slack-chat-header": function(event, template) {
+  "click .slack-chat-header, click #asksupport-again": function(event, template) {
     var supportHistory = SlackChat.Utils.supportHistory(),
       instance = Template.instance(),
+      isReopenEvent = _.isEqual($(event.target).attr('id'), 'asksupport-again'),
       slackChatSettings = instance.data.slackChatSettings,
       customerServiceName = slackChatSettings.customerServiceName,
       customerId = slackChatSettings.customerId,
@@ -9,10 +27,26 @@ Template.slackChatWindow.events({
       alertTeam = slackChatSettings.alertTeam,
       channelToAlert = slackChatSettings.channelToAlert,
       customerServiceStatus = instance.slackChatWindowVars.get('customerServiceStatus'),
-      channelId = supportHistory && supportHistory.channelId;
+      channelId = supportHistory && supportHistory.channelId,
+      dataToUnachive = {
+        channelId: channelId
+      };
     if (customerServiceStatus && !_.isEqual(customerServiceStatus, 'away')) {
       if (supportHistory) {
-        SlackChat.Utils.getSlackChanelHistory(instance, channelId);
+        if (isReopenEvent) {
+          SlackChat.Utils.unachiveChannel(instance, dataToUnachive, function(error, response) {
+            if (error) {
+              console.log(error);
+            } else {
+              if (response.ok) {
+                SlackChat.Utils.deleteArchivedChannelMessage(instance);
+                SlackChat.Utils.getSlackChanelHistory(instance, channelId);
+              }
+            }
+          });
+        } else {
+          SlackChat.Utils.getSlackChanelHistory(instance, channelId);
+        }
       } else {
         SlackChat.Utils.createNewSlackChannel(instance);
       };
@@ -23,21 +57,30 @@ Template.slackChatWindow.events({
 
     SlackChat.Utils.toggleSlackChat(instance);
   },
+  'click #ping-customer-support': function(event, template) {
+    var instance = Template.instance(),
+      slackChatSettings = instance.data.slackChatSettings,
+      dataToNotify = {
+        text: instance.$('#text-to-ping').val() || '!Hey ' + slackChatSettings.customerName + ' Needs some support',
+        channelToAlert: '#general'
+      };
+    SlackChat.Utils.notifyTeam(slackChatSettings, dataToNotify);
+  },
   'keyup': function(event, template) {
     event.preventDefault();
-    if(event.keyCode == 13){
-    var instance = Template.instance(),
-      slackDataSettings = instance.data.slackChatSettings,
-      supportHistory = SlackChat.Utils.supportHistory(),
-      textAreaElement = instance.$('#slack-post-text')
-    messageData = {
-        text: textAreaElement.val(),
-        channel: supportHistory.channelId,
-        username: slackDataSettings.customerName,
-        icon_url: 'http://lorempixel.com/48/48'
-      },
-      sendSlackMessage = SlackChat.Utils.postSlackChatMessage(messageData);
-    textAreaElement.val('');
+    if (event.keyCode == 13) {
+      var instance = Template.instance(),
+        slackDataSettings = instance.data.slackChatSettings,
+        supportHistory = SlackChat.Utils.supportHistory(),
+        textAreaElement = instance.$('#slack-post-text')
+      messageData = {
+          text: textAreaElement.val(),
+          channel: supportHistory.channelId,
+          username: slackDataSettings.customerName,
+          icon_url: slackDataSettings.customerImage
+        },
+        sendSlackMessage = SlackChat.Utils.postSlackChatMessage(messageData);
+      textAreaElement.val('');
     }
   }
 });
@@ -68,6 +111,9 @@ Template.slackChatWindow.helpers({
   isLeaveMessage: function() {
     return _.isEqual(this.subtype, 'channel_leave');
   },
+  isReopenMessage: function() {
+    return _.isEqual(this.subtype, 'reopen');
+  },
   isNormalMessage: function() {
     return _.isEqual(this.subtype, 'bot_message') || _.isEqual(this.subtype, 'message');
   },
@@ -75,7 +121,6 @@ Template.slackChatWindow.helpers({
     return Template.instance().slackChatWindowVars.equals('chatOpen', true);
   },
   isSupportUserIsAvaible: function(status) {
-    console.log(status);
     return _.isEqual(status, 'active');
   },
   isSupportUserIsAway: function() {
@@ -98,6 +143,12 @@ Template.slackChatWindow.helpers({
   },
   customerServiceName: function() {
     return Template.instance().data.slackChatSettings.customerServiceName;
+  },
+  allowPingToGeneral: function() {
+    return Template.instance().data.slackChatSettings.allowPingToGeneral;
+  },
+  customerSupportEmail: function() {
+    return Template.instance().data.slackChatSettings.customerSupportEmail;
   },
   someErrorOcurr: function() {
     return '';

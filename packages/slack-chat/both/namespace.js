@@ -1,5 +1,7 @@
 SlackChat = {
   Utils: {},
   Methods: {},
-  Collections: {}
+  Collections: {
+    ChatHistory : new Mongo.Collection(null)
+  }
 }

@@ -43,12 +43,15 @@ Template.Slack-Chat.helpers({
         this.customerName = (this.userMeteorAccounts ? Meteor.user().username : 'You')
         this.queryMessages = 3000;
         this.customerServiceName = 'Ethaan';
+        this.customerImage = null;
         this.joinChatMessage = 'Join The Chat';
         this.leaveChatMessage = 'Leave The Chat';
         this.archivedChatMessage = 'Thanks For All, i had to leave';
         this.companyName = 'AnactionPlan';
         this.alertTeam = true;
         this.channelToAlert = '#supporttickets';
+        this.allowPingToGeneral = true;
+        this.customerSupportEmail = 'support@anactionplan.com';
       };
     return slackChatSettings;
   }
@@ -76,7 +79,10 @@ All this options are optionals, the only thing that is mandatory in this package
   <code>queryMessages</code> : (optional) how offten check for new messages into the chat, default is <code>3000</code>
 </li>
 <li>
- <code>customerServiceName</code> : (optional) Custommer service name to show in the chat, default is <code>Support</code>
+ <code>customerServiceName</code> : (optional) Customer service name to show in the chat, default is <code>Support</code>
+</li>
+<li>
+ <code>customerImage</code> : (optional) Customer Image to show on the chat box , default is slacklogo
 </li>
 <li>
   <code>joinChatMessage</code> : (optional) Message to show in the chat when other person join the current Chat, default is <code>Join The Chat</code>
@@ -95,6 +101,12 @@ All this options are optionals, the only thing that is mandatory in this package
 </li>
 <li>
   <code>channelToAlert</code> : (optional) channel to alert, if <code>alertTeam</code> is <code>true</code>, and you forgot to add a name here, default will be <code>#general</code>
+</li>
+<li>
+ <code>allowPingToGeneral</code> : (optional) default is <code>false</code>, if <code>true</code> this will allow the user ping to #general channel, when noone from customer service or serice support is avaible.
+</li>
+<li>
+ <code>customerSupportEmail</code> : (optional) If customerSupportEmail is provided a tiny form will be showed, allowing the user send an email in case noones from customer service is online and allowPingToGeneral is set to <code>false</code>
 </li>
 </ul>
 
@@ -126,4 +138,3 @@ Here we had 2 collection
 
 
   Ethan Escareño ([Ethaan] (https://github.com/Ethaan))
-

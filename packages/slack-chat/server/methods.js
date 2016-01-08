@@ -3,46 +3,44 @@ var slackSettings = Meteor.settings.slack,
   methodsNamespace = SlackChat.Methods;
 
 if (!token) {
-  console.error("Slack Token Missing")
+  console.error("Slack Token Missing");
 }
 Meteor.methods({
-  'POST/Channels/Create': function(customerId, customerName) {
-    check([customerId, customerName], [String]);
-    var channelName = 'support -' + customerName;
+  'POST/Channels/Create': function(options) {
+    check([options], [Object]);
+    var channelName = 'support -' + options.customerName;
+    return insertChannel = SlackAPI.channels.create(token, options.channelName);
+  },
+  'POST/Channels/NameTaken': function(options) {
+    check([options], [Object]);
+    var channelName = 'support -' + options.customerId;
     return insertChannel = SlackAPI.channels.create(token, channelName);
   },
-  'POST/Channels/NameTaken': function(customerId, customerName) {
-    check([customerId, customerName], [String]);
-    var channelName = 'support -' + customerId;
-    return insertChannel = SlackAPI.channels.create(token, channelName);
+  'GET/Channels/History': function(options) {
+    check([options], [Object]);
+    return SlackAPI.channels.history(token, options.channelId);
   },
-  'GET/Channels/History': function(channelId) {
-    check([channelId], [String]);
-    var channelHistory = SlackAPI.channels.history(token, channelId);
-    return channelHistory;
-  },
-  'POST/Chat/Message': function(messageData) {
-    check([messageData], [Object]);
-    var channel = messageData.channel,
-      text = messageData.text,
-      username = messageData.username,
-      as_user = true;
-    return postMessage = SlackAPI.chat.postMessage(token, channel, text, {
-      as_user: true,
-      username: username,
-      icon_url: 'http://lorempixel.com/48/48'
+  'POST/Chat/Message': function(options) {
+    check([options], [Object]);
+    return SlackAPI.chat.postMessage(token, options.channel, options.text, {
+      as_user: false,
+      username: options.username,
+      icon_url: options.customerImage
     });
   },
   'POST/Users/GetPresence': function() {
-    var userPresence = SlackAPI.users.getPresence(token);
-    return userPresence;
+    return SlackAPI.users.getPresence(token);
   },
-  'POST/Channels/AlertMessage': function(channel, newChannel) {
-    check([channel, newChannel], [String]);
-    text = 'New Channel Support Created on Channel : ' + newChannel;
-    return postMessage = SlackAPI.chat.postMessage(token, channel, text, {
-      username: 'BOT',
-      as_user: true
+  'POST/Chat/UnachiveChannel':function(options){
+    check([options], [Object]);
+    return SlackAPI.channels.unarchive(token, options.channelId);
+  },
+  'POST/Channels/AlertMessage': function(options) {
+    check([options], [Object]);
+    return postMessage = SlackAPI.chat.postMessage(token, options.channelToAlert, options.text, {
+      username: 'Slack-Chat-Bot',
+      as_user: false,
+      icon_url:'https://status.slack.com/img/allgood@2x.png'
     });
   },
   'POST/Channels/Archive': function(channelId) {

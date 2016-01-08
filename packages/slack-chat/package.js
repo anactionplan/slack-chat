@@ -39,9 +39,7 @@ Package.onUse(function(api) {
 
     'client/views/slack-window-chat.html',
     'client/views/slack-window-chat.js',
-    'client/views/slack-window-chat.css',
-
-    'client/collections/chatHistory.js',
+    'client/views/slack-window-chat.css'
   ], 'client');
 
   api.addFiles([

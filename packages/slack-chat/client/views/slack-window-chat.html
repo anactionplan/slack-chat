@@ -29,16 +29,30 @@
             {{#if isArchivedMessage this.type}}
               {{customerServiceName}} - {{archivedChatMessage}}
             {{/if}}
+            {{#if isReopenMessage this.type}}
+              {{customerServiceName}} closes the channel, <a href="#" id="asksupport-again">{{this.text}}</a>
+            {{/if}}
             {{#if isNormalMessage}}
               {{this.owner}} - {{this.text}}
             {{/if}}
           {{/each}}
           <textarea id="slack-post-text" placeholder="Chat here"></textarea>
-          <button id="slack-post-submit">Send</button>
         {{/if}} {{! End Chat Error}}
         {{else}}
-        <textarea id="slack-post-text" placeholder="Enter a message..."></textarea>
-          <!-- <button id="slack-post-submit">Send</button> -->
+          {{#if allowPingToGeneral}} {{! start allowPingToGeneral Helper}}
+          <textarea name="text-to-ping" rows="8" cols="40" id="text-to-ping">
+            Heyy i need support
+          </textarea>
+           <a href="#" id="ping-customer-support">Wakeup Customer Support</a>
+            {{else}}
+           {{#if customerSupportEmail}} {{!start customerSupportEmail helper}}
+            <a href="mailto:{{customerSupportEmail}}?subject=I need some support&body=Im having troubles with ">
+              Send Email To customer support
+            </a>
+            {{else}}
+            Upps. it seems like noones its active right now.
+           {{/if}} {{!end customerSupportEmail helper}}
+          {{/if}} {{! end allowPingToGeneral helper}}
          <!-- Customer Service Not Avaible -->
         {{/if}} {{! End Customer Service Stauts}}
       {{/if}} {{! End Some Error Ocurr Helper}}
