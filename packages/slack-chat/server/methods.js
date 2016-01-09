@@ -6,16 +6,11 @@ if (tokens.length < 1) {
 }
 
 function getUserPresence(token) {
-  console.log("el token que voy a checar es " + token);
   userPresence = SlackAPI.users.getPresence(token);
   if (userPresence.ok && userPresence.online) {
-    console.log("esta online");
-    console.log("el token para usar es " + token);
     tokenToUse = token;
   } else {
-    console.log("no esta online");
     tokens.shift();
-    console.log(tokens[0]);
     getUserPresence(tokens[0])
   };
   return tokenToUse;
