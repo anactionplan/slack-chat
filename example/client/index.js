@@ -17,7 +17,7 @@ Template.body.helpers({
         this.channelToAlert = '#supporttickets';
         this.achiveChannels = true;
         this.allowPingToGeneral = false;
-        this.customerSupportEmail = 'support@AnactionPlan.com'
+        this.customerSupportEmail = null;
       };
     return slackChatSettings;
   }

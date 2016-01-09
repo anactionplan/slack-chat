@@ -10,27 +10,29 @@ Each channel will be created with the name of <code>support-{customerName}</code
 
 ## Usage
 
-First you need to install the package.
+**First** you need to install the package.
 
     meteor add anactionplan:slack-chat
 
-Second put neccesary data on <code>Meteor.settings</code>.
-
-The token is the only thing this package needs to work basic.
+**Second** In order to make this package work, you need to pass an array of tokens, each token is
+for each of the team members.
 
 ```javascript
   "slack":{
-    "token":"xxx-yourotken-xxxx-morethings"
+    "tokens":[
+      "xxxx-xxxx-xxxx-xxxx",
+      "xxxx-xxxx-xxxx-xxxx"
+    ]
   }
 ```
 
-Third Call it as a Spacebars Template.
+**Third** Call it as a Spacebars Template.
 
 <template name="Slack-Chat">
     {{> slackChatWindow slackChatSettings=dataToSlack}}
 </template>
 
-Four, create a helper for the first <code>slackChatSettings</code> argument.
+**Four**, create a helper for the first <code>slackChatSettings</code> argument.
 
 ```javascript
 Template.Slack-Chat.helpers({
