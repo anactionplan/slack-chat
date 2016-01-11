@@ -28,9 +28,9 @@ for each of the team members.
 
 **Third** Call it as a Spacebars Template.
 
-<template name="Slack-Chat">
-    {{> slackChatWindow slackChatSettings=dataToSlack}}
-</template>
+        <template name="Slack-Chat">
+             {{> slackChatWindow slackChatSettings=dataToSlack}}
+        </template>
 
 **Four**, create a helper for the first <code>slackChatSettings</code> argument.
 
